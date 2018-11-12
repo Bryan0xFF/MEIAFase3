@@ -33,7 +33,9 @@ public class ArbolBinario {
     private void CrearArchivos() throws IOException{
         
         File file = new File("C:\\MEIA\\Datos.ABB");
+        file.createNewFile();
         file = new File("C:\\MEIA\\Datos_Master.ABB");        
+        file.createNewFile();
     }
     
     private Nodo ObtenerRaiz() {
@@ -62,35 +64,15 @@ public class ArbolBinario {
         }
     }
     
-    private String ObtenerDatos(String datoSerializado){
-        
-        String[] split = datoSerializado.trim().split("\\|");
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append(split[2]);
-        sb.append("|");
-        sb.append(split[3]);
-        sb.append("|");
-        sb.append(split[4]);
-        sb.append("|");
-        sb.append(split[5]);
-        sb.append("|");
-        sb.append(split[6]);
-        sb.append("|");
-        sb.append(split[7]);
-        sb.append("\r\n");
-        
-        return sb.toString();
-        
-    }
+
     
     public void InsertarMaster(String datoSerializado) throws IOException{
         
-         FileWriter fw = new FileWriter("C:\\MEIA\\Datos_Master.ABB");
+        FileWriter fw = new FileWriter("C:\\MEIA\\Datos_Master.ABB", true);
         BufferedWriter bw = new BufferedWriter(fw);
         
         //se escribe solo la RAW data sin apuntadores en el master
-        bw.write(ObtenerDatos(datoSerializado));
+        bw.append(Serialize.GetDataOnly(datoSerializado));
         bw.flush();
         bw.close();
         
@@ -120,6 +102,7 @@ public class ArbolBinario {
         
         if (temp == null && Raiz != null) {
             
+            
             //Se busca el numero de registro en Master
             FileReader fr = new FileReader("C:\\MEIA\\Datos_Master.ABB");
             BufferedReader br = new BufferedReader(fr);
@@ -146,20 +129,23 @@ public class ArbolBinario {
             }
             
             //TODO: Sobreescribir
-            this.Sobreescribir(Serialize.SerializarNodo(modificar), Integer.toString(regPadre), pos);
+            this.Sobreescribir(Integer.toString(datos.size()), Integer.toString(regPadre), pos);
+            this.Escribir(datoSerializado, "C:\\MEIA\\Datos.ABB");
             return true;
         }
         
         //el dato es mas grande que el dato en el nodo actual
-        if(Compare.Comparar(datoSerializado, Raiz.dato) > 0){
-            
-            Insertar(datoSerializado, Integer.parseInt(temp.derecho), root, true);
+        if(Compare.Comparar(datoSerializado, temp.dato) > 0){
+            String puntero = temp.derecho.replace("&", "");
+            Insertar(datoSerializado, Integer.parseInt(puntero), root, true);
+            return true;
         }
         
         //el dato es mas pequenio que el dato en el nodo actual
-        if(Compare.Comparar(datoSerializado, Raiz.dato) < 0){
-            
-            Insertar(datoSerializado, Integer.parseInt(temp.izquierdo), root,false);
+        if(Compare.Comparar(datoSerializado, temp.dato) < 0){
+            String puntero = temp.izquierdo.replace("&", "");
+            Insertar(datoSerializado, Integer.parseInt(puntero), root,false);
+            return true;
         }
         
      
@@ -172,10 +158,10 @@ public class ArbolBinario {
         
        try{
            //se escribe en Datos.ABB
-           FileWriter fw = new FileWriter(path);
+           FileWriter fw = new FileWriter(path, true);
            BufferedWriter bw = new BufferedWriter(fw);
            
-           bw.write(Serialize);
+           bw.append(Serialize);
            bw.flush();
            bw.close();
            
@@ -235,7 +221,7 @@ public class ArbolBinario {
             }
             br.close();
             
-            offset = Integer.parseInt(apuntadorActual) - 1;
+            offset = Integer.parseInt(apuntadorActual) -1;
             
             
             RAF = new RandomAccessFile("C:\\MEIA\\Datos.ABB", "rw");
@@ -248,7 +234,7 @@ public class ArbolBinario {
             
             
         }catch(Exception e){
-            
+            e.printStackTrace();
         }
         
     }
@@ -267,7 +253,7 @@ class Serialize {
             result.append("-1");
             
         }else{
-            result.append(izq);
+            result.append(ToFixedSizeString(izq, 2));
         }
         
         result.append("|");
@@ -277,7 +263,7 @@ class Serialize {
             result.append("-1");
             
         }else{
-            result.append(der);
+            result.append(ToFixedSizeString(der, 2));
         }
        
         result.append("|");
@@ -344,6 +330,51 @@ class Serialize {
         
         String[] split = datosSerializados.trim().split("\\|");
         StringBuilder sb = new StringBuilder();
+        sb.append(split[0]);
+        sb.append("|");
+        sb.append(split[1]);
+        sb.append("|");
+        sb.append(split[2]);
+        sb.append("|");
+        sb.append(split[3]);
+        sb.append("|");
+        sb.append(split[4]);
+        sb.append("|");
+        sb.append(split[5]);
+        sb.append("|");
+        sb.append(split[6]);
+        sb.append("|");
+        sb.append(split[7]);
+        
+        String izq = split[0];
+        String der = split[1];
+        
+        nodo = new Nodo(izq, der, sb.toString());
+        return nodo;
+    }
+    
+    public static int TamanioFijo(){
+        return 275;
+    }
+    
+    public static String ToFixedSizeString(String word, int count) {
+    String result = ""; 	
+    int complement = count - word.length();
+      for(int i = 0; i < complement; i++) {
+	result += "&";
+      }
+        return result+word;        
+    }
+    
+    /**
+     * obtiene los datos sin los apuntadores a otros nodos
+     * @param datosSerializados
+     * @return 
+     */
+    public static String GetDataOnly(String datosSerializados){
+        
+        String[] split = datosSerializados.trim().split("\\|");
+        StringBuilder sb = new StringBuilder();
         sb.append(split[2]);
         sb.append("|");
         sb.append(split[3]);
@@ -356,25 +387,8 @@ class Serialize {
         sb.append("|");
         sb.append(split[7]);
         sb.append("\r\n");
+        return sb.toString();
         
-        String izq = split[0];
-        String der = split[1];
-        
-        nodo = new Nodo(izq, der, sb.toString());
-        return nodo;
-    }
-    
-    public static int TamanioFijo(){
-        return 269;
-    }
-    
-    public static String ToFixedSizeString(String word, int count) {
-    String result = ""; 	
-    int complement = count - word.length();
-      for(int i = 0; i < complement; i++) {
-	result += "&";
-      }
-        return result+word;        
     }
 }
 
@@ -382,8 +396,8 @@ class Compare {
     
     public static int Comparar(String datoNodoInsertar, String datoNodoActual) throws Exception{
         
-        String[] datosInsertar = datoNodoInsertar.trim().split("\\|");
-        String[] datosActual = datoNodoActual.trim().split("\\|");
+        String[] datosInsertar = datoNodoInsertar.replace("&", "").trim().split("\\|");
+        String[] datosActual = datoNodoActual.replace("&","").trim().split("\\|");
         
         if (datosInsertar[2].compareTo(datosActual[2]) == 0) {
              
