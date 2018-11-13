@@ -7,6 +7,7 @@ package Classes;
 import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -243,6 +244,17 @@ public class ArbolBinario {
     public Nodo Buscar(String cadena) {
        
         return null;
+    }
+    
+    public static List getDataFromMaster() throws FileNotFoundException, IOException {
+        DefaultTableModel model = new DefaultTableModel(); 
+        FileReader fr = new FileReader("C:\\MEIA\\Datos.ABB");
+        BufferedReader br = new BufferedReader(fr);
+        List<String> datos = br.lines().collect(Collectors.toList());
+        br.close();
+               
+        
+        return datos;        
     }
     
 }

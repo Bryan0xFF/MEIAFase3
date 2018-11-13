@@ -15,13 +15,13 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author rodri
  */
-public class MessagesForm extends javax.swing.JFrame {
+public class MessagesFormAdmin extends javax.swing.JFrame {
 
     Usuario loggedUser; 
     DefaultTableModel model; 
     List<String> datos;
     
-    public MessagesForm() {
+    public MessagesFormAdmin() {
         initComponents();
         this.model = (DefaultTableModel) tableEnviados.getModel();
       
@@ -238,20 +238,21 @@ public class MessagesForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MessagesForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MessagesFormAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MessagesForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MessagesFormAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MessagesForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MessagesFormAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MessagesForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MessagesFormAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MessagesForm().setVisible(true);
+                new MessagesFormAdmin().setVisible(true);
             }
         });
     }

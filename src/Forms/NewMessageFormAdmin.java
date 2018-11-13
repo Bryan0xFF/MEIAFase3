@@ -24,13 +24,13 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author rodri
  */
-public class NewMessageForm extends javax.swing.JFrame {
+public class NewMessageFormAdmin extends javax.swing.JFrame {
 
     String destinatario, asunto, mensaje;
     ArbolBinario arbol;
     Usuario loggedUser;     
     
-    public NewMessageForm(){
+    public NewMessageFormAdmin(){
         initComponents();
         this.setLocationRelativeTo(null);
         arbol = new ArbolBinario();
@@ -198,7 +198,7 @@ public class NewMessageForm extends javax.swing.JFrame {
         
         }
         catch (Exception ex) {
-            Logger.getLogger(NewMessageForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewMessageFormAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEnviarActionPerformed
 
@@ -223,20 +223,21 @@ public class NewMessageForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewMessageForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NewMessageFormAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewMessageForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NewMessageFormAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewMessageForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NewMessageFormAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewMessageForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NewMessageFormAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewMessageForm().setVisible(true);
+                new NewMessageFormAdmin().setVisible(true);
             }
         });
     }

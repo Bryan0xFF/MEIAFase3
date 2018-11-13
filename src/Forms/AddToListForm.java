@@ -170,8 +170,6 @@ public class AddToListForm extends javax.swing.JFrame {
             asociado = secuencial.ObtenerUsuario(nombreAsociado, "Usuario");
             int count = 0;    
             
-            IndiceListaUsuario indiceListaUsuario = new IndiceListaUsuario();            
-            SecIndizado secuencialIndex = new SecIndizado();
             IndexSecuencial index = new IndexSecuencial();    
             
             if (asociado.getUsuario().equals(nombreAsociado)) {

@@ -129,7 +129,7 @@ public class CreateListsForm extends javax.swing.JFrame {
        
          try { 
              Lista newList = new Lista(nombreLista, usuario, descripcion); 
-             JOptionPane.showMessageDialog(null, "La lista " + nombreLista + " se ha agregafo con éxito", "Agregar",WIDTH);
+             JOptionPane.showMessageDialog(null, "La lista " + nombreLista + " se ha agregado con éxito", "Agregar",WIDTH);
          } 
          catch (Exception ex) {
              Logger.getLogger(CreateListsForm.class.getName()).log(Level.SEVERE, null, ex);
