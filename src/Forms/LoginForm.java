@@ -12,6 +12,7 @@ import Classes.Usuario;
 import static java.awt.image.ImageObserver.WIDTH;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import proyecto_meia.BDD;
 
 
 /**
@@ -31,8 +32,7 @@ public class LoginForm extends javax.swing.JFrame {
         initComponents();
         this.setIconImage(new ImageIcon(getClass().getResource("/Images/LOGO_MEIA2.png")).getImage());
         try{
-            
-           //ArchivoSecuencial = new Classes.Secuencial("usuario");
+        BDD.getInstancia().conexion();
            
         }catch (Exception e){
             e.printStackTrace();
@@ -151,7 +151,7 @@ public class LoginForm extends javax.swing.JFrame {
         newUser = secuencial.ObtenerUsuario(user, "usuario");
         secuencial = new Secuencial("lista",tfUsuario.getText() ,"5");
         secuencial = new Secuencial("lista_usuario",tfUsuario.getText() ,"5");
-        indexSecuencial = new IndexSecuencial(); 
+    
         
             if(password.equals(newUser.getPassword()) && user.equals(newUser.getUsuario())) {                
              switch (newUser.getRol()) {

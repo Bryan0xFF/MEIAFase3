@@ -31,9 +31,10 @@ public class AddToListForm extends javax.swing.JFrame {
     Lista lista = new Lista(); 
     DefaultListModel allLists = new DefaultListModel();
     public Usuario user = new Usuario(); 
-    Secuencial secuencial = new Secuencial(); 
+   // Secuencial secuencial = new Secuencial(); 
     String nombreAsociado = ""; 
-     String nombreLista = ""; 
+    String nombreLista = ""; 
+     
     public AddToListForm() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -167,10 +168,8 @@ public class AddToListForm extends javax.swing.JFrame {
             nombreLista = List.getSelectedValue();
             nombreAsociado = tfUsuario.getText();            
             Usuario asociado = new Usuario();
-            asociado = secuencial.ObtenerUsuario(nombreAsociado, "Usuario");
+            asociado = Secuencial.ObtenerUsuario(nombreAsociado, "Usuario");
             int count = 0;    
-            
-            IndexSecuencial index = new IndexSecuencial();    
             
             if (asociado.getUsuario().equals(nombreAsociado)) {
               lista = lista.ObtenerLista(user.getUsuario(), nombreLista);
@@ -178,25 +177,12 @@ public class AddToListForm extends javax.swing.JFrame {
               count++;
               lista.numero_usuarios = String.valueOf(count);
               String overWritedList = lista.setFixedSize();
-              Classes.Lista.SobreescribirLista(overWritedList, nombreLista, "lista", lista.getSize(),user.getUsuario());
               
               Lista_Usuario listaUsuario = new Lista_Usuario(nombreLista, user.getUsuario(), nombreAsociado, lista.descripcion);
               
-              String ultimoReg = index.UltimoRegistro();
-              String num = String.valueOf(ultimoReg.charAt(0));
-              String bloque = "1." + num;
-              String nombreListaAdd = nombreLista;
-              String usuarioMaster = user.getUsuario();
-              String usuarioAsc = asociado.getUsuario();
-              int siguiente = -1;
-              String status = "1";
-              
-              IndiceListaUsuario temp = new IndiceListaUsuario(Integer.valueOf(num), bloque, nombreListaAdd, usuarioMaster, usuarioAsc, siguiente, status);
-              String usuarioCrear = temp.ToString();
-              String[] split = usuarioCrear.split("\\|");
-              
-              index.escribir(ultimoReg.split("\\|"), split,Integer.parseInt(IndexSecuencial.ObtenerInicio()), 2);
+              Classes.Secuencial.Escribir(listaUsuario.setFixedSizeString(), "lista_usuario", user.getUsuario());
               JOptionPane.showMessageDialog(null, "El usuario: " + nombreAsociado + " se ha agregado a la lista: " + nombreLista, "Agregar",WIDTH);  
+            
             }
             else if (!asociado.equals(user)){
               JOptionPane.showMessageDialog(null, "El usuario que desea agregar no existe", "Error",WIDTH);

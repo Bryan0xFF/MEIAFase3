@@ -30,7 +30,7 @@ public class NewMessageForm extends javax.swing.JFrame {
     ArbolBinario arbol;
     Usuario loggedUser;     
     
-    public NewMessageForm(){
+    public NewMessageForm(String cadena){
         initComponents();
         this.setLocationRelativeTo(null);
         arbol = new ArbolBinario();
@@ -90,7 +90,7 @@ public class NewMessageForm extends javax.swing.JFrame {
             }
         });
 
-        btnEnviarLista.setText("Enviar a lista");
+        btnEnviarLista.setText("Enviar a una lista");
         btnEnviarLista.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEnviarListaActionPerformed(evt);
@@ -108,8 +108,8 @@ public class NewMessageForm extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tfDestinatario, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)
-                        .addComponent(btnEnviarLista, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(51, 51, 51)
+                        .addComponent(btnEnviarLista))
                     .addGroup(panelEnviarMensajeLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
@@ -203,7 +203,9 @@ public class NewMessageForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEnviarActionPerformed
 
     private void btnEnviarListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarListaActionPerformed
-        // TODO add your handling code here:
+        ViewListsForm view = new ViewListsForm(); 
+        view.show();
+        
     }//GEN-LAST:event_btnEnviarListaActionPerformed
 
     /**
@@ -236,7 +238,7 @@ public class NewMessageForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewMessageForm().setVisible(true);
+                new NewMessageForm("").setVisible(true);
             }
         });
     }
