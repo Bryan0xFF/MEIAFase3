@@ -5,10 +5,18 @@
  */
 package Forms;
 
-import Classes.ABB;
+import Classes.ArbolBinario;
+import Classes.Secuencial;
+import Classes.Serialize;
+import Classes.Usuario;
 import Classes.UsuarioMensajes;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,11 +25,15 @@ import java.util.logging.Logger;
 public class NewMessageForm extends javax.swing.JFrame {
 
     String destinatario, asunto, mensaje;
-    ABB<UsuarioMensajes> user = new ABB();
+    ArbolBinario arbol;
+    Usuario loggedUser; 
     
     public NewMessageForm() {
         initComponents();
         this.setLocationRelativeTo(null);
+        arbol = new ArbolBinario();
+        MessagesForm messages = new MessagesForm(); 
+        loggedUser = messages.loggedUser;
     }
 
     /**
@@ -151,25 +163,22 @@ public class NewMessageForm extends javax.swing.JFrame {
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
       destinatario = tfDestinatario.getText();
       asunto = tfAsunto.getText();
-      mensaje = taMensaje.getText();
-      
-      UsuarioMensajes usuario = new UsuarioMensajes(); 
-      UsuarioMensajes usuario2 = new UsuarioMensajes(); 
-      UsuarioMensajes usuario3 = new UsuarioMensajes(); 
-      UsuarioMensajes usuario4 = new UsuarioMensajes(); 
-      
-      usuario.setNumRegistro(7);
-      usuario2.setNumRegistro(3);
-      usuario3.setNumRegistro(2);
-      usuario4.setNumRegistro(9);
+      mensaje = taMensaje.getText();      
      
-        try {
-            user.insert(usuario, user.getHead());
-            user.insert(usuario2, user.getHead());
-            user.insert(usuario3, user.getHead());
-            user.insert(usuario4, user.getHead());
-            
-            
+        try {     
+            if(Secuencial.BuscarBool(destinatario, "Usuario")) {
+                //IZQ|DER|EMISOR|RECEPTOR|FECHA|ASUNTO|MENSAJE|ADJUNTO(ESTE SIEMPRE VA NULO)
+                String datoAgregar = Serialize.serializar("-1", "-1", loggedUser.getUsuario(), tfDestinatario.getText(), CrearFecha(), tfAsunto.getText(), 
+                taMensaje.getText(), "");
+                arbol.InsertarMaster(datoAgregar);
+                arbol.Insertar(datoAgregar, 1, 1, false); 
+                JOptionPane.showMessageDialog(null, "Mensaje enviado", "Notificación",WIDTH);
+            }
+            else {
+                 JOptionPane.showMessageDialog(null, "El usuario seleccionado no existe", "Error",WIDTH);
+            }
+        
+        
         }
         catch (Exception ex) {
             Logger.getLogger(NewMessageForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -209,6 +218,18 @@ public class NewMessageForm extends javax.swing.JFrame {
                 new NewMessageForm().setVisible(true);
             }
         });
+    }
+    
+     private String CrearFecha(){
+        
+        Date date = Calendar.getInstance().getTime();
+        
+            DateFormat formatter = new SimpleDateFormat(
+                "EEEE, dd MMMM yyyy, hh:mm:ss.SSS a");
+            String today = formatter.format(date);
+            
+            return today;
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

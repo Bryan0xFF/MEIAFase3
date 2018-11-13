@@ -5,18 +5,21 @@
  */
 package Forms;
 
+import Classes.Usuario;
+
 /**
  *
  * @author rodri
  */
 public class MessagesForm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form MessagesForm
-     */
+    Usuario loggedUser; 
+    
     public MessagesForm() {
         initComponents();
         this.setLocationRelativeTo(null);
+        UserForm user = new UserForm(); 
+        loggedUser = user.usuario;
     }
 
     /**

@@ -4,61 +4,61 @@
  * and open the template in the editor.
  */
 package Classes;
+import java.io.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
- * @author rodri
+ * @author Bryan Mejía
  */
-public class Nodo<T> {
+public class Nodo {
     
-    public Nodo<T> Left;
-    public Nodo<T> Right;
-    public Nodo<T> Parent;
-    public T Value;
+    String dato;
+    String izquierdo;
+    String derecho;
+    String padre;
     
-    public Nodo() {   
-    }
-    
-    public Nodo(Nodo<T> Left, Nodo<T> Right, Nodo<T> Parent, T Value) {
-        this.Left = Left;
-        this.Right = Right;
-        this.Parent = Parent;
-        this.Value = Value;
-    }
-
-    public Nodo<T> getLeft() {
-        return Left;
-    }
-
-    public void setLeft(Nodo<T> Left) {
-        this.Left = Left;
-    }
-
-    public Nodo<T> getRight() {
-        return Right;
-    }
-
-    public void setRight(Nodo<T> Right) {
-        this.Right = Right;
-    }
-
-    public Nodo<T> getParent() {
-        return Parent;
-    }
-
-    public void setParent(Nodo<T> Parent) {
-        this.Parent = Parent;
-    }
-
-    public T getValue() {
-        return Value;
-    }
-
-    public void setValue(T Value) {
-        this.Value = Value;
-    }
-    
+    //necesita el dato ya serializado
+    public Nodo(String dato){
         
+        this.dato = dato;
+        izquierdo = "-1";
+        derecho = "-1";
+        padre = "-1";
+        
+    }
     
+    public Nodo(String izq, String der, String dato){
+        this.dato = dato;
+        this.izquierdo = izq;
+        this.derecho = der;
+    }
     
+    public static Nodo ObtenerNodo(int posReg){
+        
+       try{
+           
+           if (posReg == -1) {
+               return null;
+           }
+           
+           FileReader fr = new FileReader("C:\\MEIA\\Datos.ABB");
+           BufferedReader br = new BufferedReader(fr);
+           
+           List<String> datos = br.lines().collect(Collectors.toList());
+           String dato = datos.get(posReg - 1);
+           
+           Nodo nodoNuevo = Serialize.deserialize(dato);
+           
+           return nodoNuevo;
+           
+       }catch(Exception e){
+           
+           e.printStackTrace();
+           return null;
+           
+       }
+     
+    }
 }
