@@ -29,7 +29,8 @@ public class NewMessageForm extends javax.swing.JFrame {
 
     String destinatario, asunto, mensaje;
     ArbolBinario arbol;
-    Usuario loggedUser;     
+    Usuario loggedUser;   
+    int numGrupo;
     
     public NewMessageForm(String cadena){
         initComponents();
@@ -193,6 +194,8 @@ public class NewMessageForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+      
+      numGrupo = Integer.valueOf(tfGrupo.getText().toString());
       destinatario = tfDestinatario.getText();
       asunto = tfAsunto.getText();
       mensaje = taMensaje.getText();      
@@ -202,7 +205,7 @@ public class NewMessageForm extends javax.swing.JFrame {
             taMensaje.getText(), "");
             arbol.InsertarMaster(datoAgregar);
             arbol.Insertar(datoAgregar, 1, 1, false); 
-            BDD.getInstancia().Insert(2,11,loggedUser.getUsuario(),destinatario, asunto, mensaje);
+            BDD.getInstancia().Insert(2,numGrupo,loggedUser.getUsuario(),destinatario, asunto, mensaje);
         }
         catch (Exception ex) {
             Logger.getLogger(NewMessageForm.class.getName()).log(Level.SEVERE, null, ex);
