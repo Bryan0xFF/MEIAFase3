@@ -9,10 +9,17 @@ package proyecto_meia;
  * @author Josue Higueros
  */
 
+import Classes.ArbolBinario;
+import Classes.Secuencial;
+import Classes.Serialize;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +35,7 @@ public class Listener extends Thread {
     private String Asunto;
     private String Mensaje;
     private Notificacion Not;  
+    private ArbolBinario arbol = new ArbolBinario(); 
 
     Listener(Connection conn) throws SQLException {
 		this.Conexion = conn;
@@ -61,25 +69,34 @@ public class Listener extends Thread {
                             GrupoReceptor = parameter.split("\\{")[2].replace("}","").split(",")[2].split(":")[1];
                             Emisor = parameter.split("\\{")[2].replace("}","").split(",")[3].split(":")[1];
                             Receptor = parameter.split("\\{")[2].replace("}","").split(",")[4].split(":")[1];
+                            Receptor = Receptor.replaceAll("\"", "");
                             Asunto = parameter.split("\\{")[2].replace("}","").split(",")[6].split(":")[1];
                             Mensaje = parameter.split("\\{")[2].replace("}","").split(",")[7].split(":")[1];
                             boolean existe = false;
                             
                             if(GrupoReceptor.equals("2")){
                                 //si es para mi se envia el update con la respuesta
-                                BDD.getInstancia().setMensaje("El Grupo " + GrupoReceptor + " te ha enviado un Correo." );
-                                Not = new Notificacion();
-                                Not.setVisible(true);
-                             
-                                //ACA USTEDES DEBEN GESTIONAR A DONDE ENVIAR LOS DATOS OBTENIDOS DE LA NOTIFICACION PARA MOSTRARLOS EN LA BANDEJA DE ENTRADA
-                                
-                                //si es para mi enviar el update con la respuesta de que el usuario existe
-                                //Deben de validar cada uno si el usuario existe o no en su ordenador y enviar la respuesta de esta forma al servidor
-                                if(existe){
+                                try {
+                                    existe = Secuencial.BuscarBool(Receptor, "Usuario");
+                                    if(existe){
                                     BDD.getInstancia().Update(id, existe);
-                                }else{
+                                    
+                                    BDD.getInstancia().setMensaje("El Grupo " + GrupoEmisor + " te ha enviado un Correo");
+                                    String datoAgregar = Serialize.serializar("-1", "-1", Emisor, Receptor, CrearFecha(), Asunto, Mensaje,"");
+                                    
+                                    Not = new Notificacion();
+                                    Not.setVisible(true);
+                                    }else{
                                     BDD.getInstancia().Update(id, existe);
-                                }                                        
+                                    BDD.getInstancia().setMensaje("El Grupo " + GrupoEmisor + " envió un correo a usuario inexistente." );
+                                    Not = new Notificacion();
+                                    Not.setVisible(true);
+                                    } 
+                                }
+                                catch (Exception ex) {
+                                    
+                                }
+                                                                       
                             }
                         }else{
                             //UPDATE
@@ -97,7 +114,7 @@ public class Listener extends Thread {
                             //Aca deben de colocar su numero de Grupo 
                             if(GrupoEmisor.equals("2")){
 				
-                                String respuesta = parameter.split("\\{")[2].replace("}","").split(",")[7].split(":")[1];
+                                String respuesta = parameter.split("\\{")[2].replace("}","").split(",")[8].split(":")[1];
                                  //Comprobar cual fue la respuesta
                                  if(respuesta.equals("false")){
                                     BDD.getInstancia().setMensaje("El grupo " + GrupoReceptor + " no ha encontrado el usuario al cual enviaste el correo." );
@@ -123,5 +140,17 @@ public class Listener extends Thread {
                 Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+     private String CrearFecha(){
+        
+        Date date = Calendar.getInstance().getTime();
+        
+            DateFormat formatter = new SimpleDateFormat(
+                "EEEE, dd MMMM yyyy, hh:mm:ss.SSS a");
+            String today = formatter.format(date);
+            
+            return today;
+        
     }
 }
