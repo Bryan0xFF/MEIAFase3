@@ -38,7 +38,7 @@ public class Serialize {
         result.append("|");
         result.append(ToFixedSizeString(usuario_receptor, 20));
         result.append("|");
-        result.append(ToFixedSizeString(Fec_Trans, 34));
+        result.append(ToFixedSizeString(Fec_Trans, 50));
         result.append("|");
         result.append(ToFixedSizeString(asunto, 30));
         result.append("|");
@@ -79,7 +79,7 @@ public class Serialize {
         result.append("|");
         result.append(ToFixedSizeString(split[1], 20));
         result.append("|");
-        result.append(ToFixedSizeString(split[2], 34));
+        result.append(ToFixedSizeString(split[2], 50));
         result.append("|");
         result.append(ToFixedSizeString(split[3], 30));
         result.append("|");
@@ -121,7 +121,7 @@ public class Serialize {
     }
     
     public static int TamanioFijo(){
-        return 275;
+        return 284;
     }
     
     public static String ToFixedSizeString(String word, int count) {

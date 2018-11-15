@@ -5,6 +5,7 @@
  */
 package Forms;
 
+import Classes.ArbolBinario;
 import Classes.IndexSecuencial;
 import Classes.SecIndizado;
 import Classes.Secuencial;
@@ -25,6 +26,7 @@ public class LoginForm extends javax.swing.JFrame {
     
     Secuencial secuencial; 
     IndexSecuencial indexSecuencial;
+    ArbolBinario arbol;
     public static Usuario newUser = new Usuario(); 
     
      
@@ -151,7 +153,7 @@ public class LoginForm extends javax.swing.JFrame {
         newUser = secuencial.ObtenerUsuario(user, "usuario");
         secuencial = new Secuencial("lista",tfUsuario.getText() ,"5");
         secuencial = new Secuencial("lista_usuario",tfUsuario.getText() ,"5");
-    
+        arbol = new ArbolBinario(); 
         
             if(password.equals(newUser.getPassword()) && user.equals(newUser.getUsuario())) {                
              switch (newUser.getRol()) {

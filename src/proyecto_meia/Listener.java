@@ -80,9 +80,11 @@ public class Listener extends Thread {
                                     existe = Secuencial.BuscarBool(Receptor, "Usuario");
                                     if(existe){
                                     BDD.getInstancia().Update(id, existe);
-                                    
                                     BDD.getInstancia().setMensaje("El Grupo " + GrupoEmisor + " te ha enviado un Correo");
+                                    //Linea para agregar al arbol y al master
                                     String datoAgregar = Serialize.serializar("-1", "-1", Emisor, Receptor, CrearFecha(), Asunto, Mensaje,"");
+                                    arbol.InsertarMaster(datoAgregar);
+                                    arbol.Insertar(datoAgregar, 1, 1, false);             
                                     
                                     Not = new Notificacion();
                                     Not.setVisible(true);
