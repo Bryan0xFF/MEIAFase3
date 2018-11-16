@@ -756,10 +756,10 @@ public class Secuencial {
         return true;
     }
     
-    public static List<String> getUsersInList(String usuario, String master) throws FileNotFoundException, IOException {
+    public static List<String> getUsersInList(String usuario, String nombreLista) throws FileNotFoundException, IOException {
         List<String> lista = new ArrayList();         
         
-        FileReader fr = new FileReader("C:\\MEIA\\" + master + ".txt");
+        FileReader fr = new FileReader("C:\\MEIA\\bitacora_lista_usuario.txt");
         BufferedReader br = new BufferedReader(fr);
         
         Usuario temp = null;
@@ -772,13 +772,12 @@ public class Secuencial {
             String[] splittedList = datosMaster.get(i)
                     .replace("&", "").split("\\|");
             //String NombreLista, String UsuarioPropietario, String amigo, String descripcion, int fecha, int status
-            
-            if (splittedList[1].equals(usuario)) {
+            if (splittedList[0].equals(nombreLista) && splittedList[1].equals(usuario)) {
                 lista.add(splittedList[2]);
             }  
         }
         //no encontro, po lo cual se busca en el archivo bitacora
-        fr = new FileReader("C:\\MEIA\\bitacora_" + master + ".txt");
+        fr = new FileReader("C:\\MEIA\\lista_usuario.txt");
         br = new BufferedReader(fr);
         
         List<String> datosBit = br.lines().collect(Collectors.toList());
@@ -788,10 +787,9 @@ public class Secuencial {
             String[] splittedList = datosBit.get(i)
                     .replace("&", "").split("\\|");
             //String NombreLista, String UsuarioPropietario, String amigo, String descripcion, int fecha, int status
-            
-            if (splittedList[1].equals(usuario)) {
+            if (splittedList[0].equals(nombreLista) && splittedList[1].equals(usuario)) {
                 lista.add(splittedList[2]);
-            } 
+            }  
         }
         return lista;
     }

@@ -13,8 +13,10 @@ import Classes.UsuarioMensajes;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -31,11 +33,17 @@ public class NewMessageForm extends javax.swing.JFrame {
     ArbolBinario arbol;
     Usuario loggedUser;   
     int numGrupo;
+    List<String> usuariosLista = new ArrayList();
     
-    public NewMessageForm(String cadena){
+    
+    public NewMessageForm(List<String> cadena){
         initComponents();
         this.setLocationRelativeTo(null);
         arbol = new ArbolBinario();
+        usuariosLista = cadena;
+        if(usuariosLista != null) {
+            tfDestinatario.setText(usuariosLista.toString());
+        }
         MessagesForm messages = new MessagesForm(); 
         loggedUser = messages.loggedUser;
     }
@@ -199,13 +207,25 @@ public class NewMessageForm extends javax.swing.JFrame {
       destinatario = tfDestinatario.getText();
       asunto = tfAsunto.getText();
       mensaje = taMensaje.getText();      
-     
+      destinatario = destinatario.substring(1, destinatario.length() - 1);
+      
         try {   
-            String datoAgregar = Serialize.serializar("-1", "-1", loggedUser.getUsuario(), tfDestinatario.getText(), CrearFecha(), tfAsunto.getText(), 
-            taMensaje.getText(), "");
-            arbol.InsertarMaster(datoAgregar);
-            arbol.Insertar(datoAgregar, 1, 1, false); 
-            BDD.getInstancia().Insert(2,numGrupo,loggedUser.getUsuario(),destinatario, asunto, mensaje);
+            if(usuariosLista.size() > 0) {
+                for (int i = 0; i < usuariosLista.size(); i++) {
+                    String datoAgregar = Serialize.serializar("-1", "-1", loggedUser.getUsuario(), usuariosLista.get(i), CrearFecha(), tfAsunto.getText(), 
+                     taMensaje.getText(), "");
+                     arbol.InsertarMaster(datoAgregar);
+                     arbol.Insertar(datoAgregar, 1, 1, false); 
+                     BDD.getInstancia().Insert(2,numGrupo,loggedUser.getUsuario(), usuariosLista.get(i), asunto, mensaje);
+                }
+            }
+            else {
+                String datoAgregar = Serialize.serializar("-1", "-1", loggedUser.getUsuario(), tfDestinatario.getText(), CrearFecha(), tfAsunto.getText(), 
+                taMensaje.getText(), "");
+                arbol.InsertarMaster(datoAgregar);
+                arbol.Insertar(datoAgregar, 1, 1, false); 
+                BDD.getInstancia().Insert(2,numGrupo,loggedUser.getUsuario(),destinatario, asunto, mensaje);
+            }
         }
         catch (Exception ex) {
             Logger.getLogger(NewMessageForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -252,7 +272,7 @@ public class NewMessageForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewMessageForm("").setVisible(true);
+                new NewMessageForm(null).setVisible(true);
             }
         });
     }

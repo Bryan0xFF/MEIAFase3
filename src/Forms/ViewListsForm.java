@@ -6,8 +6,11 @@
 package Forms;
 
 import Classes.Lista;
+import Classes.Secuencial;
 import Classes.Usuario;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -19,6 +22,7 @@ import javax.swing.DefaultListModel;
 public class ViewListsForm extends javax.swing.JFrame {
 
     Lista lista = new Lista(); 
+    List<String> usuarios = new ArrayList();
     DefaultListModel allLists = new DefaultListModel();
     public Usuario user = new Usuario(); 
    
@@ -97,7 +101,14 @@ public class ViewListsForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+        try{
+           usuarios = Secuencial.getUsersInList(user.getUsuario(), List.getSelectedValue());
+           NewMessageForm form = new NewMessageForm(usuarios);
+           form.show();
+        }
+        catch (Exception ex) {
+            
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     /**
@@ -140,4 +151,5 @@ public class ViewListsForm extends javax.swing.JFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
 }

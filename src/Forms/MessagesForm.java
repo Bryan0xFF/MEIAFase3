@@ -216,7 +216,7 @@ public class MessagesForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        NewMessageForm newMessage = new NewMessageForm(""); 
+        NewMessageForm newMessage = new NewMessageForm(null); 
         newMessage.show();
         this.dispose();
     }//GEN-LAST:event_btnNuevoActionPerformed
