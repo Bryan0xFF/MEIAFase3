@@ -95,7 +95,7 @@ public class Serialize {
         
         Nodo nodo = null;
         
-        String[] split = datosSerializados.trim().split("\\|");
+        String[] split = datosSerializados.trim().replace("&","").split("\\|");
         StringBuilder sb = new StringBuilder();
         sb.append(split[0]);
         sb.append("|");

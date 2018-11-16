@@ -5,6 +5,7 @@
  */
 package Classes;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
@@ -240,11 +241,46 @@ public class ArbolBinario {
         }
         
     }
-    
-    public Nodo Buscar(String cadena) {
+    /**
+     * se busca por el campo de receptor, bajo la premisa que el emisor es siempre quien envia el mensaje
+     * @param campo1
+     * @param root
+     * @return 
+     */
+    public List<String> Buscar(String campo1, int root) {
+        
+        List<String> lista = new ArrayList<>();
+        
+         if (root == -1) {
+            
+            return lista;
+            
+        }
+        
+        Nodo temp = Nodo.ObtenerNodo(root);
+ 
+        String[] split = temp.dato.replace("&","").split("\\|");
+        //split[2] usuario_emisor, split[3] usuario_receptor
+        String datoComparar = split[3];
+        
+        //print
+        if (datoComparar.equals(campo1)) {
+            
+            lista.add(temp.dato);
+            
+ 
+        }
+        
        
-        return null;
+        //izquierdo
+       lista.addAll(Buscar(campo1, Integer.parseInt(temp.izquierdo)));
+       //derecho
+       lista.addAll(Buscar(campo1, Integer.parseInt(temp.derecho)));
+       
+       return lista;
     }
+    
+   
     
     public static List getDataFromMaster() throws FileNotFoundException, IOException {
         DefaultTableModel model = new DefaultTableModel(); 

@@ -166,6 +166,9 @@ public class LoginForm extends javax.swing.JFrame {
                     AdminForm admin = new AdminForm(); 
                     IngresoListaSecuencial ils = new IngresoListaSecuencial(newUser.getUsuario());
                     admin.show();
+                    
+                    NewJFrame frame = new NewJFrame();
+                    frame.show();
                     break;
             
                 default:      

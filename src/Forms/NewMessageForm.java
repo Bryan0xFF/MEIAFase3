@@ -205,7 +205,7 @@ public class NewMessageForm extends javax.swing.JFrame {
             taMensaje.getText(), "");
             arbol.InsertarMaster(datoAgregar);
             arbol.Insertar(datoAgregar, 1, 1, false); 
-           // BDD.getInstancia().Insert(2,numGrupo,loggedUser.getUsuario(),destinatario, asunto, mensaje);
+            BDD.getInstancia().Insert(2,numGrupo,loggedUser.getUsuario(),destinatario, asunto, mensaje);
         }
         catch (Exception ex) {
             Logger.getLogger(NewMessageForm.class.getName()).log(Level.SEVERE, null, ex);
