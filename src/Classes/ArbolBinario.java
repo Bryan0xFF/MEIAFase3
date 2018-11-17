@@ -25,9 +25,13 @@ public class ArbolBinario {
         try{
             
             Raiz = ObtenerRaiz();
-            CrearArchivos();  
+            CrearArchivos();
+            DefaultDescriptor();
+            
         }catch(Exception e){
+            
             e.printStackTrace();
+            
         }
         
     }
@@ -38,6 +42,33 @@ public class ArbolBinario {
         file.createNewFile();
         file = new File("C:\\MEIA\\Datos_Master.ABB");        
         file.createNewFile();
+        file = new File("C:\\MEIA\\Desc_Arbol.ABB");
+        file.createNewFile();
+    }
+    
+    private void DefaultDescriptor () {
+        
+        try{
+            
+            
+        FileWriter fw = new FileWriter("C:\\MEIA\\Desc_Arbol.ABB");
+        BufferedWriter bw = new BufferedWriter(fw);
+        
+        bw.write("Num_reg: " + "0");
+        bw.write("\r\n");
+        bw.write("Reg_inicio: " + "1");
+        bw.write("\r\n");
+        bw.write("reg_activos: "+"0");
+        bw.write("\r\n");
+        bw.write("Reg_inact: " + "0");
+        
+        bw.flush();
+        bw.close();
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
     }
     
     private Nodo ObtenerRaiz() {
@@ -280,10 +311,107 @@ public class ArbolBinario {
        return lista;
     }
     
-   
+    private void ActualizarDescriptor(int nuevaRaiz, int regAct, int regInac) throws IOException{
+        
+        FileWriter fw = new FileWriter("C:\\MEIA\\Desc_Arbol.ABB");
+        BufferedWriter bw = new BufferedWriter(fw);
+        
+        bw.write("Num_reg: " + Integer.toString((regAct + regInac)));
+        bw.write("\r\n");
+        bw.write("Reg_inicio: " + Integer.toString(nuevaRaiz));
+        bw.write("\r\n");
+        bw.write("reg_activos: "+ Integer.toString(regAct));
+        bw.write("\r\n");
+        bw.write("Reg_inact: " + Integer.toString(regInac));
+        
+        bw.flush();
+        bw.close();
+        
+    }
+    
+    /**
+     * aqui se envia el dato completo (con todo y apuntadores) a eliminar
+     * @param datoSerializadoEliminar
+     * @param root
+     * @return 
+     */
+    public boolean Eliminar(String mensaje, int root){
+        
+        Nodo actual = Nodo.ObtenerNodo(root);
+        String dato = actual.dato;
+        
+        String[] splitDatoActual = dato.trim().replace("&", "").split("\\|");
+        String[] splitMensaje = mensaje.trim().replace("&", "").split("\\|");
+        
+        if (splitDatoActual[2].equals(splitMensaje[2])) {
+            
+            if (splitDatoActual[3].equals(splitMensaje[3])) {
+                
+                if (splitDatoActual[4].equals(splitMensaje[4])) {
+                    //es el dato
+                    
+                    //tiene 2 hijos
+                    if (actual.derecho.equals("-1") && actual.izquierdo.equals("-1")) {
+                        
+                        
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        return false;
+    }
+    
+    private Nodo masIzquierdo(int root, int regPadre){
+        
+        Nodo actual = Nodo.ObtenerNodo(root);
+        
+        if (actual.derecho.equals("-1") && actual.izquierdo.equals("-1")) {
+            
+            return actual;
+            
+        }
+        
+        if (!actual.derecho.equals("-1")) {
+            
+            masIzquierdo(Integer.parseInt(actual.derecho), root);
+            
+        }
+        
+        if (actual.derecho.equals("-1")) {
+            
+            boolean buscarIzq = BuscarIzq(regPadre);
+            
+            //tiene izquierdo
+            if (buscarIzq == true) {
+                
+                masIzquierdo(Integer.parseInt(actual.izquierdo), root);
+                
+            }
+        }
+        
+        return null;
+    }
+    
+    private boolean BuscarIzq(int reg){
+        
+        Nodo actual = Nodo.ObtenerNodo(reg);
+        
+        if (actual.izquierdo.equals("-1")) {
+            return false;
+        }
+        else{
+            return true;
+        }
+        
+    }
     
     public static List getDataFromMaster() throws FileNotFoundException, IOException {
-        DefaultTableModel model = new DefaultTableModel(); 
+        
         FileReader fr = new FileReader("C:\\MEIA\\Datos.ABB");
         BufferedReader br = new BufferedReader(fr);
         List<String> datos = br.lines().collect(Collectors.toList());
