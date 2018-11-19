@@ -85,6 +85,11 @@ public class NewMessageForm extends javax.swing.JFrame {
         taMensaje.setColumns(20);
         taMensaje.setRows(5);
         taMensaje.setText("Mensaje de prueba");
+        taMensaje.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                taMensajeKeyTyped(evt);
+            }
+        });
         jScrollPane3.setViewportView(taMensaje);
 
         jLabel1.setText("Para:");
@@ -207,25 +212,33 @@ public class NewMessageForm extends javax.swing.JFrame {
       destinatario = tfDestinatario.getText();
       asunto = tfAsunto.getText();
       mensaje = taMensaje.getText();      
-      destinatario = destinatario.substring(1, destinatario.length() - 1);
       
-        try {   
-            if(usuariosLista.size() > 0) {
-                for (int i = 0; i < usuariosLista.size(); i++) {
-                    String datoAgregar = Serialize.serializar("-1", "-1", loggedUser.getUsuario(), usuariosLista.get(i), CrearFecha(), tfAsunto.getText(), 
-                     taMensaje.getText(), "");
-                     arbol.InsertarMaster(datoAgregar);
-                     arbol.Insertar(datoAgregar, 1, 1, false); 
-                     BDD.getInstancia().Insert(2,numGrupo,loggedUser.getUsuario(), usuariosLista.get(i), asunto, mensaje);
+        try {
+            if (usuariosLista != null) {
+                destinatario = destinatario.substring(1, destinatario.length() - 1);
+                String[] data = destinatario.split(",");
+                for (int i = 0; i < data.length; i++) {
+                    String datoAgregar = Serialize.serializar("-1", "-1", loggedUser.getUsuario(), data[i], CrearFecha(), tfAsunto.getText(),
+                            taMensaje.getText(), "");
+                    arbol.InsertarMaster(datoAgregar);
+                    arbol.Insertar(datoAgregar, 1, 1, false);
+                    BDD.getInstancia().Insert(2, numGrupo, loggedUser.getUsuario(), data[i], asunto, mensaje);
+                    datoAgregar = "";
+                }
+            } else {
+                String[] data = destinatario.split(",");
+                for (int i = 0; i < data.length; i++) {
+                    String datoAgregar = Serialize.serializar("-1", "-1", loggedUser.getUsuario(), data[i], CrearFecha(), tfAsunto.getText(),
+                            taMensaje.getText(), "");
+                    arbol.InsertarMaster(datoAgregar);
+                    arbol.Insertar(datoAgregar, 1, 1, false);
+                    BDD.getInstancia().Insert(2, numGrupo, loggedUser.getUsuario(), data[i], asunto, mensaje);
+                    datoAgregar = "";
                 }
             }
-            else {
-                String datoAgregar = Serialize.serializar("-1", "-1", loggedUser.getUsuario(), tfDestinatario.getText(), CrearFecha(), tfAsunto.getText(), 
-                taMensaje.getText(), "");
-                arbol.InsertarMaster(datoAgregar);
-                arbol.Insertar(datoAgregar, 1, 1, false); 
-                BDD.getInstancia().Insert(2,numGrupo,loggedUser.getUsuario(),destinatario, asunto, mensaje);
-            }
+            MessagesForm form = new MessagesForm();
+            form.show();
+            this.dispose();
         }
         catch (Exception ex) {
             Logger.getLogger(NewMessageForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -241,6 +254,13 @@ public class NewMessageForm extends javax.swing.JFrame {
     private void tfAsuntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfAsuntoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfAsuntoActionPerformed
+
+    private void taMensajeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_taMensajeKeyTyped
+        if(taMensaje.getText().length() > 150) {
+            evt.consume();
+            JOptionPane.showMessageDialog(rootPane, "No puede ingresar más de 150 caracteres"); 
+        }
+    }//GEN-LAST:event_taMensajeKeyTyped
 
     /**
      * @param args the command line arguments

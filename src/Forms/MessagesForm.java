@@ -18,25 +18,33 @@ import javax.swing.table.DefaultTableModel;
 public class MessagesForm extends javax.swing.JFrame {
 
     Usuario loggedUser; 
-    DefaultTableModel model; 
-    List<String> datos;
-    
+    DefaultTableModel modelEnviados, modelRecibidos; 
+    List<String> elementosEnviados;
+    List<String> elementosRecibidos;
     public MessagesForm() {
         initComponents();
-        this.model = (DefaultTableModel) tableEnviados.getModel();
+        this.modelEnviados = (DefaultTableModel) tableEnviados.getModel();
+        this.modelRecibidos = (DefaultTableModel) tableRecibidos.getModel();
       
         this.setLocationRelativeTo(null);
         UserForm user = new UserForm(); 
         loggedUser = user.usuario;
-         try {
-            datos = ArbolBinario.getDataFromMaster();
+        try {
+            elementosEnviados = ArbolBinario.BuscarEmisor(loggedUser.getUsuario(), 1);
+            elementosRecibidos = ArbolBinario.BuscarReceptor(loggedUser.getUsuario(), 1);
+
+            for (int i = 0; i < elementosEnviados.size(); i++) {
+                String[] data = elementosEnviados.get(i).split("\\|");
+                modelEnviados.addRow(new Object[]{data[3], data[5], data[6], data[4]});
+            }
             
-            for (int i = 0; i < datos.size(); i++) {
-            String element = Serialize.GetDataOnly(datos.get(i));
-            String[] data = element.replace("&","").split("\\|");
-            model.addRow(new Object[]{data[1], data[3], data[4], data[2]});
-        }
-            tableEnviados.setModel(model);            
+            for (int i = 0; i < elementosRecibidos.size(); i++) {
+                String[] data = elementosRecibidos.get(i).split("\\|");
+                modelRecibidos.addRow(new Object[]{data[2], data[5], data[6], data[4]});
+            }
+            
+            tableEnviados.setModel(modelEnviados);
+            tableRecibidos.setModel(modelRecibidos);
         }
         catch(Exception ex) {
             
@@ -52,7 +60,7 @@ public class MessagesForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnActualizar = new javax.swing.JButton();
+        btnView = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
         tabbedMenu = new javax.swing.JTabbedPane();
         panelRecibidos = new javax.swing.JPanel();
@@ -64,10 +72,10 @@ public class MessagesForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        btnActualizar.setText("Refrescar");
-        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+        btnView.setText("Refrescar");
+        btnView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActualizarActionPerformed(evt);
+                btnViewActionPerformed(evt);
             }
         });
 
@@ -177,11 +185,11 @@ public class MessagesForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(tabbedMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,30 +198,24 @@ public class MessagesForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tabbedMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(21, 21, 21)
+                        .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(85, 85, 85)
+                        .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-         try {
-            datos = ArbolBinario.getDataFromMaster();
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
+        try {
             
-            for (int i = 0; i < datos.size(); i++) {
-            String element = Serialize.GetDataOnly(datos.get(i));
-            String[] data = element.replace("&","").split("\\|");
-            model.addRow(new Object[]{data[1], data[3], data[4], data[2]});
+
+        } catch (Exception ex) {
+
         }
-            tableEnviados.setModel(model);            
-        }
-        catch(Exception ex) {
-            
-        }
-    }//GEN-LAST:event_btnActualizarActionPerformed
+    }//GEN-LAST:event_btnViewActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         NewMessageForm newMessage = new NewMessageForm(null); 
@@ -257,8 +259,8 @@ public class MessagesForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnView;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPanel panelEnviados;

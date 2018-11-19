@@ -145,6 +145,9 @@
                 <Property name="rows" type="int" value="5"/>
                 <Property name="text" type="java.lang.String" value="Mensaje de prueba"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="taMensajeKeyTyped"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -36,20 +36,25 @@ public class Nodo {
     }
     
     public static Nodo ObtenerNodo(int posReg){
-        
+       Nodo nodoNuevo;  
        try{
-           
            if (posReg == -1) {
                return null;
+           } else {
+               FileReader fr = new FileReader("C:\\MEIA\\Datos.txt");
+               BufferedReader br = new BufferedReader(fr);
+
+               List<String> datos = br.lines().collect(Collectors.toList());
+               
+               if (datos.size() > 0) {
+                   String dato = datos.get(posReg - 1);
+
+                   nodoNuevo = Serialize.deserialize(dato);
+               }
+               else 
+                   nodoNuevo = null;
            }
-           
-           FileReader fr = new FileReader("C:\\MEIA\\Datos.ABB");
-           BufferedReader br = new BufferedReader(fr);
-           
-           List<String> datos = br.lines().collect(Collectors.toList());
-           String dato = datos.get(posReg - 1);
-           
-           Nodo nodoNuevo = Serialize.deserialize(dato);
+
            
            return nodoNuevo;
            

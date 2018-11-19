@@ -22,47 +22,45 @@ public class ArbolBinario {
     
     public ArbolBinario() {
         
-        try{
-            
-            Raiz = ObtenerRaiz();
-            CrearArchivos();  
-        }catch(Exception e){
+        try {           
+            CrearArchivos();
+             Raiz = ObtenerRaiz();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
     
     private void CrearArchivos() throws IOException{
         
-        File file = new File("C:\\MEIA\\Datos.ABB");
+        File file = new File("C:\\MEIA\\Datos.txt");
         file.createNewFile();
-        file = new File("C:\\MEIA\\Datos_Master.ABB");        
+        file = new File("C:\\MEIA\\Datos_Master.txt");        
         file.createNewFile();
     }
     
-    private Nodo ObtenerRaiz() {
-        
-        try{
-            
-            String path = "C:\\MEIA\\Datos.ABB";
+    private Nodo ObtenerRaiz() {        
+        try {
+
+            String path = "C:\\MEIA\\Datos.txt";
             FileReader fr = new FileReader(path);
-            BufferedReader br = new BufferedReader(fr); 
-        
+            BufferedReader br = new BufferedReader(fr);
+
             String dato = br.readLine();
-            
+
             br.close();
-            
-            if(dato == null){
-            
-             return null;
+
+            if (dato == null) {
+
+                return null;
             }
-            
+
             return Serialize.deserialize(dato);
-        
-        }catch(Exception e){
-            
-             e.printStackTrace();
-             return null;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return null;
         }
     }
     
@@ -70,7 +68,7 @@ public class ArbolBinario {
     
     public void InsertarMaster(String datoSerializado) throws IOException{
         
-        FileWriter fw = new FileWriter("C:\\MEIA\\Datos_Master.ABB", true);
+        FileWriter fw = new FileWriter("C:\\MEIA\\Datos_Master.txt", true);
         BufferedWriter bw = new BufferedWriter(fw);
         
         //se escribe solo la RAW data sin apuntadores en el master
@@ -92,12 +90,13 @@ public class ArbolBinario {
         
         Nodo insertar = new Nodo(datoSerializado);
         Nodo temp = Nodo.ObtenerNodo(root);
-        
+        int datoNuevo = 0;
+            
         // no hay dato
         if (temp == null && Raiz == null) {
             
             Raiz = insertar;
-            Escribir(Raiz.dato, "C:\\MEIA\\Datos.ABB");
+            Escribir(Raiz.dato, "C:\\MEIA\\Datos.txt");
             return true;
    
         }
@@ -106,13 +105,18 @@ public class ArbolBinario {
             
             
             //Se busca el numero de registro en Master
-            FileReader fr = new FileReader("C:\\MEIA\\Datos_Master.ABB");
+            FileReader fr = new FileReader("C:\\MEIA\\Datos_Master.txt");
             BufferedReader br = new BufferedReader(fr);
             
             List<String> datos = br.lines().collect(Collectors.toList());
             br.close();
             
-            int datoNuevo = datos.size() - 1;
+            if(datos.size() == 0) {
+                datoNuevo = -1; 
+            }
+            else {
+                datoNuevo = datos.size();
+            } 
             
             //se busca el nodo padre para modificar apuntadores
             Nodo modificar = Nodo.ObtenerNodo(regPadre);
@@ -132,21 +136,21 @@ public class ArbolBinario {
             
             //TODO: Sobreescribir
             this.Sobreescribir(Integer.toString(datos.size()), Integer.toString(regPadre), pos);
-            this.Escribir(datoSerializado, "C:\\MEIA\\Datos.ABB");
+            this.Escribir(datoSerializado, "C:\\MEIA\\Datos.txt");
             return true;
         }
         
         //el dato es mas grande que el dato en el nodo actual
-        if(Compare.Comparar(datoSerializado, temp.dato) > 0){
-            String puntero = temp.derecho.replace("&", "");
-            Insertar(datoSerializado, Integer.parseInt(puntero), root, true);
+        if(Compare.Comparar(datoSerializado, temp.dato) < 0){
+            String puntero = temp.izquierdo.replace("&", "");
+            Insertar(datoSerializado, Integer.parseInt(puntero), root, false);
             return true;
         }
         
         //el dato es mas pequenio que el dato en el nodo actual
-        if(Compare.Comparar(datoSerializado, temp.dato) < 0){
-            String puntero = temp.izquierdo.replace("&", "");
-            Insertar(datoSerializado, Integer.parseInt(puntero), root,false);
+        if(Compare.Comparar(datoSerializado, temp.dato) > 0){
+            String puntero = temp.derecho.replace("&", "");
+            Insertar(datoSerializado, Integer.parseInt(puntero), root,true);
             return true;
         }
         
@@ -193,7 +197,7 @@ public class ArbolBinario {
             RandomAccessFile RAF = null;
             int offset = 0;
             
-            FileReader fr = new FileReader("C:\\MEIA\\Datos.ABB");
+            FileReader fr = new FileReader("C:\\MEIA\\Datos.txt");
             BufferedReader br = new BufferedReader(fr);
             
             List<String> datos = br.lines().collect(Collectors.toList());
@@ -227,7 +231,7 @@ public class ArbolBinario {
             offset = Integer.parseInt(apuntadorActual) -1;
             
             
-            RAF = new RandomAccessFile("C:\\MEIA\\Datos.ABB", "rw");
+            RAF = new RandomAccessFile("C:\\MEIA\\Datos.txt", "rw");
             RAF.seek(offset * Serialize.TamanioFijo());
             long pointer = RAF.getFilePointer();
             RAF.write(datoModificar.getBytes());
@@ -247,44 +251,75 @@ public class ArbolBinario {
      * @param root
      * @return 
      */
-    public List<String> Buscar(String campo1, int root) {
+    public static List<String> BuscarReceptor(String campo1, int root) {
         
         List<String> lista = new ArrayList<>();
-        
-         if (root == -1) {
-            
+
+        if (root == -1) {
+
             return lista;
-            
+
         }
-        
+
         Nodo temp = Nodo.ObtenerNodo(root);
- 
-        String[] split = temp.dato.replace("&","").split("\\|");
-        //split[2] usuario_emisor, split[3] usuario_receptor
-        String datoComparar = split[3];
-        
-        //print
-        if (datoComparar.equals(campo1)) {
-            
-            lista.add(temp.dato);
-            
- 
+
+        if (temp != null) {
+            String[] split = temp.dato.replace("&", "").split("\\|");
+            //split[2] usuario_emisor, split[3] usuario_receptor
+            String datoComparar = split[3];
+
+            //print
+            if (datoComparar.equals(campo1)) {
+
+                lista.add(temp.dato);
+            }
+
+            //izquierdo
+            lista.addAll(BuscarReceptor(campo1, Integer.parseInt(temp.izquierdo)));
+            //derecho
+            lista.addAll(BuscarReceptor(campo1, Integer.parseInt(temp.derecho)));
         }
         
-       
-        //izquierdo
-       lista.addAll(Buscar(campo1, Integer.parseInt(temp.izquierdo)));
-       //derecho
-       lista.addAll(Buscar(campo1, Integer.parseInt(temp.derecho)));
-       
-       return lista;
+
+        return lista;
     }
     
-   
+    public static List<String> BuscarEmisor(String campo1, int root) {
+        
+        List<String> lista = new ArrayList<>();
+
+        if (root == -1) {
+
+            return lista;
+
+        }
+
+        Nodo temp = Nodo.ObtenerNodo(root);
+
+        if (temp != null) {
+            String[] split = temp.dato.replace("&", "").split("\\|");
+            //split[2] usuario_emisor, split[3] usuario_receptor
+            String datoComparar = split[2];
+
+            //print
+            if (datoComparar.equals(campo1)) {
+
+                lista.add(temp.dato);
+            }
+
+            //izquierdo
+            lista.addAll(BuscarEmisor(campo1, Integer.parseInt(temp.izquierdo)));
+            //derecho
+            lista.addAll(BuscarEmisor(campo1, Integer.parseInt(temp.derecho)));
+        }
+        
+
+        return lista;
+    }
     
     public static List getDataFromMaster() throws FileNotFoundException, IOException {
         DefaultTableModel model = new DefaultTableModel(); 
-        FileReader fr = new FileReader("C:\\MEIA\\Datos.ABB");
+        FileReader fr = new FileReader("C:\\MEIA\\Datos.txt");
         BufferedReader br = new BufferedReader(fr);
         List<String> datos = br.lines().collect(Collectors.toList());
         br.close();
@@ -305,18 +340,20 @@ class Compare {
         String[] datosActual = datoNodoActual.replace("&","").trim().split("\\|");
         
         if (datosInsertar[2].compareTo(datosActual[2]) == 0) {
-             
             if (datosInsertar[3].compareTo(datosActual[3]) == 0) {
-                
-                return datosInsertar[4].compareTo(datosActual[4]);    
+                if (datosInsertar[4].compareTo(datosActual[4]) == 0) {
+
+                } else {
+                    return datosInsertar[4].compareTo(datosActual[4]);
+                }
+            } else {
+                return datosInsertar[3].compareTo(datosActual[3]);
             }
-            
-            return datosInsertar[3].compareTo(datosActual[3]);
-            
+        } else {
+            return datosInsertar[2].compareTo(datosActual[2]);
         }
-        
-        return datosInsertar[2].compareTo(datosInsertar[2]);
-        
+       
+         return 10;
     }
     
 }

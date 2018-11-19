@@ -33,6 +33,7 @@ public class LoginForm extends javax.swing.JFrame {
     public LoginForm() {
         initComponents();
         this.setIconImage(new ImageIcon(getClass().getResource("/Images/LOGO_MEIA2.png")).getImage());
+        arbol = new ArbolBinario();
         try{
         BDD.getInstancia().conexion();
            
@@ -149,39 +150,37 @@ public class LoginForm extends javax.swing.JFrame {
         String user = tfUsuario.getText(); 
         String password = newUser.Encriptar(tfPassword.getText());
          
-        try {            
-        newUser = secuencial.ObtenerUsuario(user, "usuario");
-        secuencial = new Secuencial("lista",tfUsuario.getText() ,"5");
-        secuencial = new Secuencial("lista_usuario",tfUsuario.getText() ,"5");
-        arbol = new ArbolBinario(); 
-        
-            if(password.equals(newUser.getPassword()) && user.equals(newUser.getUsuario())) {                
-             switch (newUser.getRol()) {
-                case 0:
-                    UserForm userForm = new UserForm();
-                    
-                    userForm.show();
-                    break;
-                case 1:
-                    AdminForm admin = new AdminForm(); 
-                    IngresoListaSecuencial ils = new IngresoListaSecuencial(newUser.getUsuario());
-                    admin.show();
-                    
-                    NewJFrame frame = new NewJFrame();
-                    frame.show();
-                    break;
+        try {
+            newUser = secuencial.ObtenerUsuario(user, "usuario");
+            secuencial = new Secuencial("lista", tfUsuario.getText(), "5");
+            secuencial = new Secuencial("lista_usuario", tfUsuario.getText(), "5");
             
-                default:      
-                    //Error en inicio de sesión
-                    break;
-             }
+
+            if (password.equals(newUser.getPassword()) && user.equals(newUser.getUsuario())) {
+                switch (newUser.getRol()) {
+                    case 0:
+                        UserForm userForm = new UserForm();
+
+                        userForm.show();
+                        break;
+                    case 1:
+                        AdminForm admin = new AdminForm();
+                        IngresoListaSecuencial ils = new IngresoListaSecuencial(newUser.getUsuario());
+                        admin.show();
+
+                        NewJFrame frame = new NewJFrame();
+                        frame.show();
+                        break;
+
+                    default:
+                        //Error en inicio de sesión
+                        break;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El usuario o contraseña no es correcto", "Error", WIDTH);
             }
-            else {
-            JOptionPane.showMessageDialog(null, "El usuario o contraseña no es correcto", "Error",WIDTH);
-            }
-        }
-        catch(Exception e) {
-            
+        } catch (Exception e) {
+
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

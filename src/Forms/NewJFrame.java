@@ -85,7 +85,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void btnIngresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresoActionPerformed
         // TODO add your handling code here:
-        datos = miArbol.Buscar(txtNombre.getText(), 1);
+        datos = miArbol.BuscarEmisor(txtNombre.getText(), 1);
 
         for (int i = 0; i < datos.size(); i++) {
             txtAreaNombre.insert(datos.get(i), i);
